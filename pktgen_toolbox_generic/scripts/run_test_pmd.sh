@@ -25,13 +25,13 @@ num_cores_to_select=4
 num_vf_to_select=2
 
 # our PF
-BUS_FILTER="0000:03"
+BUS_FILTER="0000:43"
 ALLOCATE_SOCKET_MEMORY=64
 DPDK_PMD_TYPE=vfio-pci
 
 NUM_HUGEPAGES=${NUM_HUGEPAGES:-1024}
 HUGEPAGE_SIZE=${HUGEPAGE_SIZE:-2048}  # Size in kB
-HUGEPAGE_MOUNT=${HUGEPAGE_MOUNT:-/mnt/huge}
+HUGEPAGE_MOUNT=${HUGEPAGE_MOUNT:-/tmp/huge}
 
 # Display help message
 usage() {
@@ -79,8 +79,8 @@ echo "DPDK PMD Type: $DPDK_PMD_TYPE"
 function select_vf_dpdk {
     local BUS_FILTER="$1"
 
-    local output="$(docker run -it --privileged --rm \
-                    spyroot/pktgen_toolbox_generic:latest dpdk-devbind.py -s \
+    local output="$(podman run -it --privileged --rm \
+                    docker.io/spyroot/pktgen_toolbox_generic:latest dpdk-devbind.py -s \
                     | grep "$DPDK_PMD_TYPE" | grep Virtual)"
 
     local pci_devices
@@ -180,7 +180,7 @@ $SELECTED_CORES selected VFs \
 $SELECTED_VF device macs: \
 $DEVICE_MAC_ADDRESSES"
 
-docker run \
+podman run \
 -e SELECTED_CORES="$SELECTED_CORES" \
 -e TARGET_VFS="$SELECTED_VF" \
 -e DEVICE_MAC_ADDRESSES="$DEVICE_MAC_ADDRESSES" \
@@ -191,4 +191,4 @@ docker run \
 -e DPDK_APP="testpmd" \
 -e DPDK_PMD_TYPE="$DPDK_PMD_TYPE" \
 -e EXTRA_ARGS="$EXTRA_ARGS" \
--it --privileged --rm spyroot/pktgen_toolbox_generic:latest /start_testpmd.sh
+-it --privileged --rm docker.io/spyroot/pktgen_toolbox_generic:latest /start_testpmd.sh

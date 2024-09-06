@@ -27,7 +27,7 @@
 # Check for environment variables and use defaults if not provided
 NUM_HUGEPAGES=${NUM_HUGEPAGES:-1024}
 HUGEPAGE_SIZE=${HUGEPAGE_SIZE:-2048}  # Size in kB
-HUGEPAGE_MOUNT=${HUGEPAGE_MOUNT:-/mnt/huge}
+HUGEPAGE_MOUNT=${HUGEPAGE_MOUNT:-/tmp/huge}
 LOG_LEVEL=${LOG_LEVEL:-7}
 NUM_CHANNELS=${NUM_CHANNELS:-2}
 NUMAS=${NUMAS:-""}
